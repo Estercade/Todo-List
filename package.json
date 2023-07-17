@@ -1,0 +1,21 @@
+{
+  "name": "todo-list",
+  "version": "1.0.0",
+  "description": "The Odin Project Todo List project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "watch": "webpack --watch",
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Estercade/Todo-List.git"
+  },
+  "author": "Estercade",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Estercade/Todo-List/issues"
+  },
+  "homepage": "https://github.com/Estercade/Todo-List#readme"
+}
