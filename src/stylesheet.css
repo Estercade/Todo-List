@@ -1,0 +1,27 @@
+/* Todo List stylesheet */
+
+* {
+    padding: 0;
+    margin: 0;
+    border: 1px solid blue;
+}
+
+#content {
+    min-height: 100vh;
+    display: grid;
+
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 19fr;
+}
+
+div #header {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+div #nav {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+div #main {
+    grid-area: 2 / 2 / 3 / 3;
+}

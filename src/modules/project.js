@@ -3,7 +3,6 @@ export default class Project {
         this.title = title;
         this.description = description;
         this._taskList = [];
-        this._labelList = [];
     }
 
     addTask(task) {
