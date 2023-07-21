@@ -1,27 +1,31 @@
+import { tasksArray } from './task.js';
+
 export default class Project {
     constructor(title, description) {
         this.title = title;
         this.description = description;
-        this._taskList = [];
+        this.tasksList = [];
     }
 
     addTask(task) {
-        this._taskList.push(task);
+        this.tasksList.push(task);
     }
 
     getTasks() {
-        return this._taskList;
+        return this.tasksList;
     }
 
     removeTask(task) {
-        const index = this._taskList.indexOf(task);
-        this._taskList = this._taskList.splice(index, 1);
+        const index = this.tasksList.indexOf(task);
+        this.tasksList = this.tasksList.splice(index, 1);
     }
 }
 
-var generic = new Project('Default', '');
+var unassigned = new Project('Default', '');
+unassigned.addTask(tasksArray[0]);
+unassigned.addTask(tasksArray[1]);
 
 const projectsArray = []; 
-projectsArray.push(generic);
+projectsArray.push(unassigned);
 
-export { projectsArray };
+export { projectsArray, unassigned };
