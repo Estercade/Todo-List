@@ -1,5 +1,5 @@
 import { projectsArray, unassigned } from './project.js';
-import { tasksArray } from './task.js';
+import { addTask } from './task.js';
 
 const taskDetailHandler = (function() {
     function showTaskDetails(e) {
@@ -108,12 +108,6 @@ const navRenderer = (function() {
     return { renderNav, updateNavProjects }
 })();
 
-const mainContentHandler = (function() {
-    const mainContent = document.getElementById('main-content');
-
-    return
-})();
-
 const inboxRenderer = (function() {
     const mainContent = document.getElementById('main-content');
 
@@ -121,9 +115,22 @@ const inboxRenderer = (function() {
         const inboxTitle = document.createElement('h3');
         inboxTitle.innerText = 'Inbox';
         mainContent.appendChild(inboxTitle);
+
+        const inboxAddTaskBtn = document.createElement('button');
+        inboxAddTaskBtn.type = 'button';
+        inboxAddTaskBtn.id = 'inbox-add-task-btn';
+        inboxAddTaskBtn.innerText = 'Add a task';
+        inboxAddTaskBtn.addEventListener('click', addTaskRenderer.renderAddTaskForm);
+        mainContent.appendChild(inboxAddTaskBtn);
         
         const inboxTasksList = document.createElement('ul');
         inboxTasksList.id = 'inbox-tasks-list';
+        _renderInboxTasks(inboxTasksList);
+
+        mainContent.appendChild(inboxTasksList);
+    }
+
+    function _renderInboxTasks(inboxTasksList) {
         unassigned.tasksList.forEach((task) => {
             const element = document.createElement('li');
             element.innerText = task.title;
@@ -139,12 +146,148 @@ const inboxRenderer = (function() {
             inboxTasksList.appendChild(element);
             element.addEventListener('click', taskDetailHandler.showTaskDetails);
         })
-        mainContent.appendChild(inboxTasksList);
     }
 
-    renderInbox();
+    function updateInboxTasks() {
+        const inboxTasksList = document.getElementById('inbox-tasks-list');
+        while (inboxTasksList.firstChild) {
+            inboxTasksList.removeChild(inboxTasksList.firstChild);
+        }
+        _renderInboxTasks(inboxTasksList);
+    }
 
-    return { renderInbox }
+    return { renderInbox, updateInboxTasks }
+})();
+
+
+const addTaskRenderer = (function() {
+    function renderAddTaskForm() {
+        const addTaskFormWrapper = document.createElement('div');
+        addTaskFormWrapper.id = 'add-task-form-wrapper';
+        addTaskFormWrapper.classList.add('modal');
+        const addTaskForm = document.createElement('div');
+        addTaskForm.id = 'add-task-form';
+        addTaskForm.classList.add('modal-content');
+
+        const addTaskFormTitle = document.createElement('p');
+        addTaskFormTitle.innerText = 'Add a task';
+        addTaskForm.append(addTaskFormTitle);
+
+        const closeAddTaskFormBtn = document.createElement('span');
+        closeAddTaskFormBtn.innerHTML = `&times;`;
+        closeAddTaskFormBtn.id = 'add-task-form-close-btn'
+        addTaskForm.append(closeAddTaskFormBtn);
+
+        const newTaskTitleLabel = document.createElement('label');
+        newTaskTitleLabel.setAttribute('for', 'new-task-title');
+        newTaskTitleLabel.innerText = 'Title';
+        addTaskForm.append(newTaskTitleLabel);
+
+        const newTaskTitleInput = document.createElement('input');
+        newTaskTitleInput.type = 'text';
+        newTaskTitleInput.id = 'new-task-title'
+        newTaskTitleInput.name = 'new-task-title';
+        addTaskForm.append(newTaskTitleInput);
+        addTaskForm.append(document.createElement('br'));
+        
+        const newTaskDescriptionLabel = document.createElement('label');
+        newTaskDescriptionLabel.setAttribute('for', 'new-task-description');
+        newTaskDescriptionLabel.innerText = 'Description';
+        addTaskForm.append(newTaskDescriptionLabel);
+
+        const newTaskDescriptionInput = document.createElement('input');
+        newTaskDescriptionInput.type = 'textarea';
+        newTaskDescriptionInput.id = 'new-task-description'
+        newTaskDescriptionInput.name = 'new-task-description';
+        addTaskForm.append(newTaskDescriptionInput);
+        addTaskForm.append(document.createElement('br'));
+
+        const newTaskDueDateLabel = document.createElement('label');
+        newTaskDueDateLabel.setAttribute('for', 'new-task-due-date');
+        newTaskDueDateLabel.for = 'new-task-due-date';
+        newTaskDueDateLabel.innerText = 'Due date';
+        addTaskForm.append(newTaskDueDateLabel);
+
+        const newTaskDueDateInput = document.createElement('input');
+        newTaskDueDateInput.type = 'datetime-local';
+        newTaskDueDateInput.id = 'new-task-due-date'
+        newTaskDueDateInput.name = 'new-task-due-date';
+        addTaskForm.append(newTaskDueDateInput);
+        addTaskForm.append(document.createElement('br'));
+
+        const newTaskPriorityLabel = document.createElement('label');
+        newTaskPriorityLabel.setAttribute('for', 'new-task-priority');
+        newTaskPriorityLabel.innerText = 'Priority';
+        addTaskForm.append(newTaskPriorityLabel);
+
+        const newTaskPrioritySelection = document.createElement('select');
+        newTaskPrioritySelection.id = 'new-task-priority';
+        newTaskPrioritySelection.name = 'new-task-priority';
+
+        const newTaskPriorityNormal = document.createElement('option');
+        newTaskPriorityNormal.value = 'Normal';
+        newTaskPriorityNormal.innerText = 'Normal';
+        newTaskPriorityNormal.selected = 'true';
+        newTaskPrioritySelection.appendChild(newTaskPriorityNormal);
+
+        const newTaskPriorityMedium = document.createElement('option');
+        newTaskPriorityMedium.value = 'Medium';
+        newTaskPriorityMedium.innerText = 'Medium';
+        newTaskPrioritySelection.appendChild(newTaskPriorityMedium);
+
+        const newTaskPriorityHigh = document.createElement('option');
+        newTaskPriorityHigh.value = 'High';
+        newTaskPriorityHigh.innerText = 'High';
+        newTaskPrioritySelection.appendChild(newTaskPriorityHigh);
+        addTaskForm.append(newTaskPrioritySelection);
+        addTaskForm.append(document.createElement('br'));
+
+        const newTaskNotesLabel = document.createElement('label');
+        newTaskNotesLabel.setAttribute('for', 'new-task-notes');
+        newTaskNotesLabel.innerText = 'Notes';
+        addTaskForm.append(newTaskNotesLabel);
+
+        const newTaskNotesInput = document.createElement('input');
+        newTaskNotesInput.type = 'textarea';
+        newTaskNotesInput.id = 'new-task-notes';
+        newTaskNotesInput.name = 'new-task-notes';
+        addTaskForm.append(newTaskNotesInput);
+
+        const newTaskSubmitBtn = document.createElement('button');
+        newTaskSubmitBtn.type = 'button';
+        newTaskSubmitBtn.id = 'new-task-submit-btn';
+        newTaskSubmitBtn.innerText = 'Submit';
+        addTaskForm.append(newTaskSubmitBtn);
+
+        newTaskSubmitBtn.addEventListener('click', addTask);
+        newTaskSubmitBtn.addEventListener('click', inboxRenderer.updateInboxTasks);
+
+        closeAddTaskFormBtn.onclick = _closeAddTaskForm;
+
+        addTaskFormWrapper.appendChild(addTaskForm);
+        const content = document.getElementById('main-content');
+        content.append(addTaskFormWrapper);
+
+        window.onclick = function(e) {
+            if (e.target == addTaskFormWrapper) { 
+                _closeAddTaskForm();
+            };
+        }
+    }
+
+    function _closeAddTaskForm() {
+        const addTaskForm = document.getElementById('add-task-form-wrapper');
+        addTaskForm.remove();
+    }
+
+    return { renderAddTaskForm };
+})();
+
+const mainContentHandler = (function() {
+    const mainContent = document.getElementById('main-content');
+    inboxRenderer.renderInbox();
+
+    return;
 })();
 
 const UIrenderer = (function() {

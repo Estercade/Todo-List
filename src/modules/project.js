@@ -1,4 +1,3 @@
-import { tasksArray } from './task.js';
 
 export default class Project {
     constructor(title, description) {
@@ -22,8 +21,6 @@ export default class Project {
 }
 
 var unassigned = new Project('Default', '');
-unassigned.addTask(tasksArray[0]);
-unassigned.addTask(tasksArray[1]);
 
 const projectsArray = []; 
 projectsArray.push(unassigned);

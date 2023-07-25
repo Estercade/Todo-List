@@ -1,5 +1,7 @@
+import { projectsArray, unassigned } from './project.js';
+
 export default class Task {
-    constructor (title, description, dueDate, priority, notes, checked) {
+    constructor (title, description, dueDate, priority, notes, checked, id) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
@@ -13,8 +15,20 @@ const bdayParty = new Task('My Birthday Party', 'Throw a birthday party for your
 
 const bdayParty2 = new Task("Mom's Birthday Party", 'Throw a birthday party for Mom', '10/01/2023', 'High', '', 'true');
 
-const tasksArray = []; 
-tasksArray.push(bdayParty);
-tasksArray.push(bdayParty2);
+unassigned.addTask(bdayParty);
+unassigned.addTask(bdayParty2);
 
-export { tasksArray };
+export function addTask() {
+    const formTitle = document.getElementById('new-task-title').value;
+    const formDescription = document.getElementById('new-task-description').value;
+    const formDueDate = document.getElementById('new-task-due-date').value;
+    const formPriority = document.getElementById('new-task-priority').value;
+    const formNotes = document.getElementById('new-task-notes').value;
+
+    // New tasks will by default by unchecked (marked as incomplete)
+    unassigned.addTask(
+        new Task(
+            formTitle, formDescription, formDueDate, formPriority, formNotes, 'false'
+        )
+    )
+}
