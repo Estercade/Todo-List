@@ -111,6 +111,26 @@ const taskDetailHandler = (function() {
     return { showTaskDetails};
 })();
 
+const deleteTaskHandler = (function() {
+    function deleteTaskConfirm(e) {
+        // parentElement of icon is the button
+        // parentElement of the button is the task item
+        const task = unassigned.tasksList[e.target.parentElement.parentElement.id];
+        if(window.confirm(`Delete ${task.title} task?`)){
+            _deleteTask(task);
+        }
+    }
+
+    function _deleteTask(task) {
+        const taskIndex = unassigned.tasksList.indexOf(task);
+        unassigned.tasksList.splice(taskIndex, 1);
+        console.log(unassigned.tasksList);
+        inboxRenderer.updateInboxTasks();
+    }
+    
+    return { deleteTaskConfirm }
+})();
+
 const inboxRenderer = (function() {
     const mainContent = document.getElementById('main-content');
 
@@ -151,7 +171,6 @@ const inboxRenderer = (function() {
             editTaskBtn.classList.add('edit-task-btn');
             const editIconWrapper = document.createElement('img');
             editIconWrapper.src = editIcon;
-
             editTaskBtn.appendChild(editIconWrapper);
             // stopPropagation prevents child elements
             // from triggering showTaskDetails function
@@ -166,6 +185,13 @@ const inboxRenderer = (function() {
             deleteTaskBtn.classList.add('delete-task-btn');
             const deleteIconWrapper = document.createElement('img');
             deleteIconWrapper.src = deleteIcon;
+            deleteTaskBtn.appendChild(deleteIconWrapper);
+            // stopPropagation prevents child elements
+            // from triggering showTaskDetails function
+            deleteTaskBtn.addEventListener('click', function stopPropagation(e) {
+                e.stopPropagation();
+            });
+            deleteTaskBtn.addEventListener('click', deleteTaskHandler.deleteTaskConfirm);
             deleteTaskBtn.appendChild(deleteIconWrapper);
             element.appendChild(deleteTaskBtn);
 
@@ -203,7 +229,6 @@ const taskFormRenderer = (function() {
         // parentElement of icon is the button
         // parentElement of the button is the task item
         const task = unassigned.tasksList[e.target.parentElement.parentElement.id];
-        console.log(task);
         _renderTaskForm('Edit task', task.title, task.description, task.dueDate, task.notes);
         
         switch (task.priority) {
