@@ -1,5 +1,7 @@
 import { projectsArray, unassigned } from './project.js';
 import { addTask } from './task.js';
+import editIcon from './assets/note-edit-outline.svg';
+import deleteIcon from './assets/trash-can-outline.svg';
 
 const taskDetailHandler = (function() {
     function showTaskDetails(e) {
@@ -143,6 +145,22 @@ const inboxRenderer = (function() {
             };
             element.appendChild(taskCheckbox);
 
+            const editTaskBtn = document.createElement('button');
+            editTaskBtn.type = 'button';
+            editTaskBtn.id = 'edit-task-btn';
+            const editIconWrapper = document.createElement('img');
+            editIconWrapper.src = editIcon;
+            editTaskBtn.appendChild(editIconWrapper);
+            element.appendChild(editTaskBtn);
+
+            const deleteTaskBtn = document.createElement('button');
+            deleteTaskBtn.type = 'button';
+            deleteTaskBtn.id = 'delete-task-btn';
+            const deleteIconWrapper = document.createElement('img');
+            deleteIconWrapper.src = deleteIcon;
+            deleteTaskBtn.appendChild(deleteIconWrapper);
+            element.appendChild(deleteTaskBtn);
+
             inboxTasksList.appendChild(element);
             element.addEventListener('click', taskDetailHandler.showTaskDetails);
         })
@@ -169,55 +187,58 @@ const addTaskRenderer = (function() {
         addTaskForm.id = 'add-task-form';
         addTaskForm.classList.add('modal-content');
 
-        const addTaskFormTitle = document.createElement('p');
-        addTaskFormTitle.innerText = 'Add a task';
-        addTaskForm.append(addTaskFormTitle);
-
         const closeAddTaskFormBtn = document.createElement('span');
         closeAddTaskFormBtn.innerHTML = `&times;`;
         closeAddTaskFormBtn.id = 'add-task-form-close-btn'
         addTaskForm.append(closeAddTaskFormBtn);
 
+        const addTaskFormTitle = document.createElement('p');
+        addTaskFormTitle.innerText = 'Add a task';
+        addTaskForm.append(addTaskFormTitle);
+
         const newTaskTitleLabel = document.createElement('label');
         newTaskTitleLabel.setAttribute('for', 'new-task-title');
-        newTaskTitleLabel.innerText = 'Title';
+        newTaskTitleLabel.innerText = 'Title: ';
         addTaskForm.append(newTaskTitleLabel);
 
         const newTaskTitleInput = document.createElement('input');
         newTaskTitleInput.type = 'text';
         newTaskTitleInput.id = 'new-task-title'
         newTaskTitleInput.name = 'new-task-title';
+        newTaskTitleInput.required = 'true';
         addTaskForm.append(newTaskTitleInput);
         addTaskForm.append(document.createElement('br'));
         
         const newTaskDescriptionLabel = document.createElement('label');
         newTaskDescriptionLabel.setAttribute('for', 'new-task-description');
-        newTaskDescriptionLabel.innerText = 'Description';
+        newTaskDescriptionLabel.innerText = 'Description (optional): ';
         addTaskForm.append(newTaskDescriptionLabel);
 
-        const newTaskDescriptionInput = document.createElement('input');
-        newTaskDescriptionInput.type = 'textarea';
+        const newTaskDescriptionInput = document.createElement('textarea');
         newTaskDescriptionInput.id = 'new-task-description'
         newTaskDescriptionInput.name = 'new-task-description';
+        newTaskDescriptionInput.setAttribute('rows', 3);
+        newTaskDescriptionInput.setAttribute('cols', '50');
         addTaskForm.append(newTaskDescriptionInput);
         addTaskForm.append(document.createElement('br'));
 
         const newTaskDueDateLabel = document.createElement('label');
         newTaskDueDateLabel.setAttribute('for', 'new-task-due-date');
         newTaskDueDateLabel.for = 'new-task-due-date';
-        newTaskDueDateLabel.innerText = 'Due date';
+        newTaskDueDateLabel.innerText = 'Due date: ';
         addTaskForm.append(newTaskDueDateLabel);
 
         const newTaskDueDateInput = document.createElement('input');
         newTaskDueDateInput.type = 'datetime-local';
         newTaskDueDateInput.id = 'new-task-due-date'
         newTaskDueDateInput.name = 'new-task-due-date';
+        newTaskDueDateInput.required = 'true';
         addTaskForm.append(newTaskDueDateInput);
         addTaskForm.append(document.createElement('br'));
 
         const newTaskPriorityLabel = document.createElement('label');
         newTaskPriorityLabel.setAttribute('for', 'new-task-priority');
-        newTaskPriorityLabel.innerText = 'Priority';
+        newTaskPriorityLabel.innerText = 'Priority: ';
         addTaskForm.append(newTaskPriorityLabel);
 
         const newTaskPrioritySelection = document.createElement('select');
@@ -244,13 +265,14 @@ const addTaskRenderer = (function() {
 
         const newTaskNotesLabel = document.createElement('label');
         newTaskNotesLabel.setAttribute('for', 'new-task-notes');
-        newTaskNotesLabel.innerText = 'Notes';
+        newTaskNotesLabel.innerText = 'Notes (optional): ';
         addTaskForm.append(newTaskNotesLabel);
 
-        const newTaskNotesInput = document.createElement('input');
-        newTaskNotesInput.type = 'textarea';
+        const newTaskNotesInput = document.createElement('textarea');
         newTaskNotesInput.id = 'new-task-notes';
         newTaskNotesInput.name = 'new-task-notes';
+        newTaskNotesInput.setAttribute('rows', '3');
+        newTaskNotesInput.setAttribute('cols', '50');
         addTaskForm.append(newTaskNotesInput);
 
         const newTaskSubmitBtn = document.createElement('button');
@@ -259,10 +281,18 @@ const addTaskRenderer = (function() {
         newTaskSubmitBtn.innerText = 'Submit';
         addTaskForm.append(newTaskSubmitBtn);
 
+        const closeAddTaskFormBtn2 = document.createElement('button');
+        closeAddTaskFormBtn2.type = 'button';
+        closeAddTaskFormBtn2.id = 'new-task-cancel-btn';
+        closeAddTaskFormBtn2.innerText = 'Cancel';
+        addTaskForm.append(closeAddTaskFormBtn2);
+
         newTaskSubmitBtn.addEventListener('click', addTask);
         newTaskSubmitBtn.addEventListener('click', inboxRenderer.updateInboxTasks);
+        newTaskSubmitBtn.addEventListener('click', _closeAddTaskForm);
 
         closeAddTaskFormBtn.onclick = _closeAddTaskForm;
+        closeAddTaskFormBtn2.onclick = _closeAddTaskForm;
 
         addTaskFormWrapper.appendChild(addTaskForm);
         const content = document.getElementById('main-content');

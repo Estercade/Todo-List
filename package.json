@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "watch": "webpack --watch",
+    "watch": "webpack --watch"
   },
   "repository": {
     "type": "git",
@@ -17,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/Estercade/Todo-List/issues"
   },
-  "homepage": "https://github.com/Estercade/Todo-List#readme"
+  "homepage": "https://github.com/Estercade/Todo-List#readme",
+  "dependencies": {
+    "css-loader": "^6.8.1",
+    "date-fns": "^2.30.0",
+    "style-loader": "^3.3.3"
+  }
 }

@@ -4,6 +4,8 @@
     padding: 0;
     margin: 0;
     border: 1px solid blue;
+
+    list-style-type: none;
 }
 
 #content {
@@ -26,6 +28,14 @@ div #main {
     grid-area: 2 / 2 / 3 / 3;
 }
 
+#delete-task-btn, #edit-task-btn {
+    width: 1.3rem;
+    background: none;
+    align-self: center;
+    position: relative;
+    top: 0.1rem;
+}
+
 .modal {
     position: fixed;
     z-index: 1;
@@ -43,4 +53,13 @@ div #main {
     padding: 10px;
     border: 1px solid black;
     width: 80%;
+}
+
+.modal-content textarea {
+    height: 2rem;
+    width: 100%;
+}
+
+#add-task-form-close-btn {
+    float: right;
 }

@@ -11,9 +11,9 @@ export default class Task {
     }
 };
 
-const bdayParty = new Task('My Birthday Party', 'Throw a birthday party for yourself', '10/25/2023', 'High', '', 'false');
+const bdayParty = new Task('My Birthday Party', 'Throw a birthday party for yourself', new Date('October 25, 2023 00:00'), 'High', '', 'false');
 
-const bdayParty2 = new Task("Mom's Birthday Party", 'Throw a birthday party for Mom', '10/01/2023', 'High', '', 'true');
+const bdayParty2 = new Task("Mom's Birthday Party", 'Throw a birthday party for Mom', new Date('October 1, 2023 00:00'), 'High', '', 'true');
 
 unassigned.addTask(bdayParty);
 unassigned.addTask(bdayParty2);
@@ -25,7 +25,7 @@ export function addTask() {
     const formPriority = document.getElementById('new-task-priority').value;
     const formNotes = document.getElementById('new-task-notes').value;
 
-    // New tasks will by default by unchecked (marked as incomplete)
+    // New tasks will by default be unchecked (marked as incomplete)
     unassigned.addTask(
         new Task(
             formTitle, formDescription, formDueDate, formPriority, formNotes, 'false'
