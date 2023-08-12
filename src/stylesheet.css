@@ -28,12 +28,14 @@ div #main {
     grid-area: 2 / 2 / 3 / 3;
 }
 
-#delete-task-btn, #edit-task-btn {
-    width: 1.3rem;
+.delete-task-btn, .edit-task-btn {
     background: none;
+    border: none;
+    outline: none;
+    width: 1.3rem;
     align-self: center;
     position: relative;
-    top: 0.1rem;
+    top: 0.2rem;
 }
 
 .modal {

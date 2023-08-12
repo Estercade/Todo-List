@@ -24,6 +24,7 @@ Wilson Lee
 - [Github](https://github.com/estercade/)
 
 ## Credits
+- Icons from [Pictogrammers](https://pictogrammers.com/library/mdi/)
 
 ## Acknowledgments
 

@@ -11,19 +11,19 @@ export default class Task {
     }
 };
 
-const bdayParty = new Task('My Birthday Party', 'Throw a birthday party for yourself', new Date('October 25, 2023 00:00'), 'High', '', 'false');
+const bdayParty = new Task('My Birthday Party', 'Throw a birthday party for yourself', '2023-10-25T00:00', 'High', '', 'false');
 
-const bdayParty2 = new Task("Mom's Birthday Party", 'Throw a birthday party for Mom', new Date('October 1, 2023 00:00'), 'High', '', 'true');
+const bdayParty2 = new Task("Mom's Birthday Party", 'Throw a birthday party for Mom', '2023-10-01T00:00', 'High', '', 'true');
 
 unassigned.addTask(bdayParty);
 unassigned.addTask(bdayParty2);
 
 export function addTask() {
-    const formTitle = document.getElementById('new-task-title').value;
-    const formDescription = document.getElementById('new-task-description').value;
-    const formDueDate = document.getElementById('new-task-due-date').value;
-    const formPriority = document.getElementById('new-task-priority').value;
-    const formNotes = document.getElementById('new-task-notes').value;
+    const formTitle = document.getElementById('task-title').value;
+    const formDescription = document.getElementById('task-description').value;
+    const formDueDate = document.getElementById('task-due-date').value;
+    const formPriority = document.getElementById('task-priority').value;
+    const formNotes = document.getElementById('task-notes').value;
 
     // New tasks will by default be unchecked (marked as incomplete)
     unassigned.addTask(
@@ -31,4 +31,20 @@ export function addTask() {
             formTitle, formDescription, formDueDate, formPriority, formNotes, 'false'
         )
     )
+}
+
+export function updateTask(task) {
+    const taskIndex = unassigned.tasksList.indexOf(task);
+
+    const formTitle = document.getElementById('task-title').value;
+    const formDescription = document.getElementById('task-description').value;
+    const formDueDate = document.getElementById('task-due-date').value;
+    const formPriority = document.getElementById('task-priority').value;
+    const formNotes = document.getElementById('task-notes').value;
+
+    unassigned.tasksList[taskIndex].title = formTitle;
+    unassigned.tasksList[taskIndex].description = formDescription;
+    unassigned.tasksList[taskIndex].dueDate = formDueDate;
+    unassigned.tasksList[taskIndex].priority = formPriority;
+    unassigned.tasksList[taskIndex].notes = formNotes;
 }

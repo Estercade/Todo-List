@@ -1,4 +1,3 @@
-
 export default class Project {
     constructor(title, description) {
         this.title = title;
