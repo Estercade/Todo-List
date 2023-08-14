@@ -65,3 +65,7 @@ div #main {
 #add-task-form-close-btn {
     float: right;
 }
+
+textarea {
+    resize: vertical;
+}

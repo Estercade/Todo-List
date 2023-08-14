@@ -19,16 +19,16 @@ unassigned.addTask(bdayParty);
 unassigned.addTask(bdayParty2);
 
 export function addTask() {
-    const formTitle = document.getElementById('task-title').value;
-    const formDescription = document.getElementById('task-description').value;
-    const formDueDate = document.getElementById('task-due-date').value;
-    const formPriority = document.getElementById('task-priority').value;
-    const formNotes = document.getElementById('task-notes').value;
+    const newTaskTitle = document.getElementById('task-title-input').value;
+    const newTaskDescription = document.getElementById('task-description-input').value;
+    const newTaskDueDate = document.getElementById('task-due-date-input').value;
+    const newTaskPriority = document.getElementById('task-priority-input').value;
+    const newTaskNotes = document.getElementById('task-notes-input').value;
 
-    // New tasks will by default be unchecked (marked as incomplete)
+    // New tasks will be unchecked (marked as incomplete) by default
     unassigned.addTask(
         new Task(
-            formTitle, formDescription, formDueDate, formPriority, formNotes, 'false'
+            newTaskTitle, newTaskDescription, newTaskDueDate, newTaskPriority, newTaskNotes, 'false'
         )
     )
 }

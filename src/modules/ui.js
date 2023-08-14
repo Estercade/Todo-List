@@ -1,4 +1,4 @@
-import { projectsArray, unassigned } from './project.js';
+import { projectsArray, unassigned, addProject } from './project.js';
 import { addTask, updateTask } from './task.js';
 import editIcon from './assets/note-edit-outline.svg';
 import deleteIcon from './assets/trash-can-outline.svg';
@@ -124,7 +124,6 @@ const deleteTaskHandler = (function() {
     function _deleteTask(task) {
         const taskIndex = unassigned.tasksList.indexOf(task);
         unassigned.tasksList.splice(taskIndex, 1);
-        console.log(unassigned.tasksList);
         inboxRenderer.updateInboxTasks();
     }
     
@@ -215,9 +214,9 @@ const taskFormRenderer = (function() {
     function renderAddTaskForm() {
         _renderTaskForm('Add a task', '', '', '', '');
 
-        // Tasks are normal priority by default
-        const taskPriorityNormal = document.getElementById('task-priority-normal');
-        taskPriorityNormal.selected = 'true';
+        // Tasks are low priority by default
+        const taskPriorityLow = document.getElementById('task-priority-low');
+        taskPriorityLow.selected = 'true';
 
         const taskSubmitBtn = document.getElementById('task-submit-btn');
         taskSubmitBtn.addEventListener('click', addTask);
@@ -230,18 +229,17 @@ const taskFormRenderer = (function() {
         // parentElement of the button is the task item
         const task = unassigned.tasksList[e.target.parentElement.parentElement.id];
         _renderTaskForm('Edit task', task.title, task.description, task.dueDate, task.notes);
-        
+        // Check and select priority of the task
         switch (task.priority) {
-            case 'Normal':
-                const taskPriorityNormal = document.getElementById('task-priority-normal');
-                taskPriorityNormal.selected = 'true';
+            case 'Low':
+                const taskPriorityLow = document.getElementById('task-priority-low');
+                taskPriorityLow.selected = 'true';
                 break;
             case 'Medium':
                 const taskPriorityMedium = document.getElementById('task-priority-medium');
                 taskPriorityMedium.selected = 'true';    
                 break;
             case 'High':
-                console.log('high');
                 const taskPriorityHigh = document.getElementById('task-priority-high');
                 taskPriorityHigh.selected = 'true';
                 break;
@@ -279,7 +277,7 @@ const taskFormRenderer = (function() {
 
         const taskTitleInput = document.createElement('input');
         taskTitleInput.type = 'text';
-        taskTitleInput.id = 'task-title'
+        taskTitleInput.id = 'task-title-input'
         taskTitleInput.name = 'task-title';
         taskTitleInput.required = 'true';
         taskTitleInput.value = taskTitle;
@@ -292,7 +290,7 @@ const taskFormRenderer = (function() {
         taskForm.append(taskDescriptionLabel);
 
         const taskDescriptionInput = document.createElement('textarea');
-        taskDescriptionInput.id = 'task-description'
+        taskDescriptionInput.id = 'task-description-input'
         taskDescriptionInput.name = 'task-description';
         taskDescriptionInput.value = taskDescription;
         taskDescriptionInput.setAttribute('rows', 3);
@@ -308,7 +306,7 @@ const taskFormRenderer = (function() {
 
         const taskDueDateInput = document.createElement('input');
         taskDueDateInput.type = 'datetime-local';
-        taskDueDateInput.id = 'task-due-date'
+        taskDueDateInput.id = 'task-due-date-input'
         taskDueDateInput.name = 'task-due-date';
         taskDueDateInput.value = taskDueDate;
         taskDueDateInput.required = 'true';
@@ -321,14 +319,14 @@ const taskFormRenderer = (function() {
         taskForm.append(taskPriorityLabel);
 
         const taskPrioritySelection = document.createElement('select');
-        taskPrioritySelection.id = 'task-priority';
+        taskPrioritySelection.id = 'task-priority-input';
         taskPrioritySelection.name = 'task-priority';
 
-        const taskPriorityNormal = document.createElement('option');
-        taskPriorityNormal.value = 'Normal';
-        taskPriorityNormal.innerText = 'Normal';
-        taskPriorityNormal.id = 'task-priority-normal';
-        taskPrioritySelection.appendChild(taskPriorityNormal);
+        const taskPriorityLow = document.createElement('option');
+        taskPriorityLow.value = 'Low';
+        taskPriorityLow.innerText = 'Low';
+        taskPriorityLow.id = 'task-priority-low';
+        taskPrioritySelection.appendChild(taskPriorityLow);
 
         const taskPriorityMedium = document.createElement('option');
         taskPriorityMedium.value = 'Medium';
@@ -350,7 +348,7 @@ const taskFormRenderer = (function() {
         taskForm.append(taskNotesLabel);
 
         const taskNotesInput = document.createElement('textarea');
-        taskNotesInput.id = 'task-notes';
+        taskNotesInput.id = 'task-notes-input';
         taskNotesInput.name = 'task-notes';
         taskNotesInput.value = taskNotes;
         taskNotesInput.setAttribute('rows', '3');
@@ -391,6 +389,96 @@ const taskFormRenderer = (function() {
     return { renderAddTaskForm, renderEditTaskForm };
 })();
 
+const projectFormHandler = (function() {
+    function renderAddProjectForm() {
+        _renderProjectForm('Add a project', '' ,'');
+
+        const projectSubmitBtn = document.getElementById('project-submit-btn');
+        projectSubmitBtn.addEventListener('click', addProject);
+        projectSubmitBtn.addEventListener('click', navRenderer.updateNavProjects);
+        projectSubmitBtn.addEventListener('click', _closeProjectForm);
+    }
+
+    function _renderProjectForm(formTitle, projectTitle, projectDescription) {
+        const projectFormWrapper = document.createElement('div');
+        projectFormWrapper.id = 'project-form-wrapper';
+        projectFormWrapper.classList.add('modal');
+        const projectForm = document.createElement('div');
+        projectForm.id = 'project-form';
+        projectForm.classList.add('modal-content');
+
+        const closeProjectFormBtn = document.createElement('span');
+        closeProjectFormBtn.innerHTML = `&times;`;
+        closeProjectFormBtn.id = 'project-form-close-btn'
+        projectForm.append(closeProjectFormBtn);
+
+        const projectFormTitle = document.createElement('p');
+        projectFormTitle.innerText = formTitle;
+        projectForm.append(projectFormTitle);
+
+        const projectTitleLabel = document.createElement('label');
+        projectTitleLabel.setAttribute('for', 'project-title');
+        projectTitleLabel.innerText = 'Title: ';
+        projectForm.append(projectTitleLabel);
+
+        const projectTitleInput = document.createElement('input');
+        projectTitleInput.type = 'text';
+        projectTitleInput.id = 'project-title-input';
+        projectTitleInput.name = 'project-title';
+        projectTitleInput.required = 'true';
+        projectTitleInput.value = projectTitle;
+        projectForm.append(projectTitleInput);
+        projectForm.append(document.createElement('br'));
+
+        const projectDescriptionLabel = document.createElement('label');
+        projectDescriptionLabel.setAttribute('for', 'project-description');
+        projectDescriptionLabel.innerText = 'Description (optional): ';
+        projectForm.append(projectDescriptionLabel);
+        projectForm.append(document.createElement('br'));
+
+        const projectDescriptionInput = document.createElement('textarea');
+        projectDescriptionInput.resize = 'vertical';
+        projectDescriptionInput.id = 'project-description-input';
+        projectDescriptionInput.name = 'project-description';
+        projectDescriptionInput.value = projectDescription;
+        projectDescriptionInput.setAttribute('rows', 3);
+        projectDescriptionInput.setAttribute('cols', '50');
+        projectForm.append(projectDescriptionInput);
+
+        const projectSubmitBtn = document.createElement('button');
+        projectSubmitBtn.type = 'button';
+        projectSubmitBtn.id = 'project-submit-btn';
+        projectSubmitBtn.innerText = 'Submit';
+        projectForm.append(projectSubmitBtn);
+
+        const closeProjectFormBtn2 = document.createElement('button');
+        closeProjectFormBtn2.type = 'button';
+        closeProjectFormBtn2.id = 'new-project-cancel-btn';
+        closeProjectFormBtn2.innerText = 'Cancel';
+        projectForm.append(closeProjectFormBtn2);
+
+        closeProjectFormBtn.onclick = _closeProjectForm;
+        closeProjectFormBtn2.onclick = _closeProjectForm;
+
+        projectFormWrapper.appendChild(projectForm);
+        const content = document.getElementById('main-content');
+        content.append(projectFormWrapper);
+
+        window.onclick = function(e) {
+            if (e.target == projectFormWrapper) { 
+                _closeProjectForm();
+            };
+        }
+    }
+
+    function _closeProjectForm() {
+        const projectForm = document.getElementById('project-form-wrapper');
+        projectForm.remove();
+    }
+
+    return { renderAddProjectForm };
+})();
+
 const mainContentHandler = (function() {
     const mainContent = document.getElementById('main-content');
     inboxRenderer.renderInbox();
@@ -422,8 +510,8 @@ const UIrenderer = (function() {
     return {  };
 })();
 
-const updateBtn = document.createElement('button');
-updateBtn.type = 'button';
-updateBtn.innerText = 'Update Nav Projects';
-nav.appendChild(updateBtn);
-updateBtn.addEventListener('click', navRenderer.updateNavTasks);
+const addProjectBtn = document.createElement('button');
+addProjectBtn.type = 'button';
+addProjectBtn.innerText = 'Add a new project';
+nav.appendChild(addProjectBtn);
+addProjectBtn.addEventListener('click', projectFormHandler.renderAddProjectForm);
